@@ -1,5 +1,8 @@
 #include <gtk/gtk.h>
 
+GtkWidget *g_lbl_hello;
+GtkWidget *g_lbl_count;
+
 int main(int argc, char *argv[])
 {
     GtkBuilder      *builder; 
@@ -7,13 +10,15 @@ int main(int argc, char *argv[])
 
     gtk_init(&argc, &argv);
 
-    // builder = gtk_builder_new();
-    // gtk_builder_add_from_file (builder, "glade/window_main.glade", NULL);
-    // Update October 2019: The line below replaces the 2 lines above
-    builder = gtk_builder_new_from_file("glade/screen.glade");
+    builder = gtk_builder_new();
+    gtk_builder_add_from_file (builder, "glade/screen.glade", NULL);
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
     gtk_builder_connect_signals(builder, NULL);
+    
+    // get pointers to the two labels
+    g_lbl_hello = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_hello"));
+    g_lbl_count = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_count"));
 
     g_object_unref(builder);
 
@@ -21,6 +26,18 @@ int main(int argc, char *argv[])
     gtk_main();
 
     return 0;
+}
+
+// called when button is clicked
+void on_btn_hello_clicked()
+{
+    static unsigned int count = 0;
+    char str_count[30] = {0};
+    
+    gtk_label_set_text(GTK_LABEL(g_lbl_hello), "Contador");
+    count++;
+    sprintf(str_count, "%d", count);
+    gtk_label_set_text(GTK_LABEL(g_lbl_count), str_count);
 }
 
 // called when window is closed
